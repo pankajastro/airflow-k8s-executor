@@ -1,0 +1,25 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ap-code
+spec:
+  storageClassName: hostpath
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteMany
+  hostPath:
+    path: "LOCAL_AIRFLOW_SOURCE_CODE_PATH" # Update this
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ap-code
+spec:
+  storageClassName: hostpath
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi

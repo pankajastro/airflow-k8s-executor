@@ -1,0 +1,42 @@
+executor: "KubernetesExecutor"
+
+# Volumes for all airflow containers
+volumes:
+  - name: ap-dags
+    persistentVolumeClaim:
+      claimName: ap-dags
+  - name: ap-code
+    persistentVolumeClaim:
+      claimName: ap-code
+
+# VolumeMounts for all airflow containers
+volumeMounts:
+  - mountPath: "/opt/airflow/dags/" # DAG's path on container. Update this as in container.
+    name: ap-dags
+    readOnly: true
+  - mountPath: "/home/airflow/.local/lib/python3.7/site-packages/airflow/" # Source code path in container. Update this as in container.
+    name: ap-code
+    readOnly: true
+
+config:
+  scheduler:
+    scheduler_heartbeat_sec: 10
+    scheduler_health_check_threshold: 5
+  logging:
+    logging_level: DEBUG
+
+scheduler:
+  replicas: 2
+
+logs:
+  persistence:
+    # Enable persistent volume for storing logs
+    enabled: true
+    # Volume size for logs
+    size: 10Gi
+    # Annotations for the logs PVC
+    annotations: {}
+    # If using a custom storageClass, pass name here
+    storageClassName:
+    ## the name of an existing PVC to use
+    existingClaim:
